@@ -1,3 +1,3 @@
 import Experience from "./Experience/Experience"
 
-new Experience()
+new Experience(document.querySelector(".webgl")!)

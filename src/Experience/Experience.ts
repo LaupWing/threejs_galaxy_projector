@@ -1,5 +1,7 @@
 export default class Experience {
-   constructor(){
-      
+   canvas: HTMLCanvasElement
+
+   constructor(canvas:HTMLCanvasElement){
+      this.canvas = canvas
    }
 }
