@@ -22,19 +22,19 @@ export default class Camera{
 
    setInstance(){
       this.instance = new THREE.PerspectiveCamera(
-         35,
+         75,
          this.sizes.width / this.sizes.height,
-         0.2,
+         0.1,
          100
       )
-      this.instance.position.set(10, 10, 20)
+      this.instance.position.set(3, 3, 3)
       this.scene.add(this.instance)
    }
 
    setOrbitControls(){
       this.controls = new OrbitControls(this.instance!, this.canvas)
       // this.controls.enabled = false
-      this.controls.enableDamping = false
+      this.controls.enableDamping = true
    }
    resize(){
       this.instance!.aspect = this.sizes.width / this.sizes.height
