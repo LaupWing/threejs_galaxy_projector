@@ -2,6 +2,7 @@ import Sizes from "./Utils/Sizes"
 import Time from "./Utils/Time"
 import * as THREE from "three"
 import Camera from "./Camera"
+import Renderer from "./Renderer"
 
 export default class Experience {
    canvas: HTMLCanvasElement
@@ -9,6 +10,7 @@ export default class Experience {
    time: Time
    scene: THREE.Scene
    camera: Camera
+   renderer: Renderer
 
    constructor(canvas:HTMLCanvasElement){
       this.canvas = canvas
@@ -16,5 +18,6 @@ export default class Experience {
       this.time = new Time()
       this.scene = new THREE.Scene()
       this.camera = new Camera(this)
+      this.renderer = new Renderer(this)
    }
 }
