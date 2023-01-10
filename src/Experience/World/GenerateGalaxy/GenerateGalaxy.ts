@@ -14,13 +14,23 @@ export default class GenerateGalaxy {
       this.scene = experience.scene
       this.debug = experience.debug
       this.setDebug()
+      this.initialize()
    }
 
    setDebug(){
-
+      if(this.debug.active){
+         const debugFolder = this.debug.ui?.addFolder("galaxy")
+         debugFolder?.add(this, "amount")
+            .name("amount")
+            .min(100)
+            .min(100000)
+            .step(100)
+            .onFinishChange(this.initialize.bind(this))
+      }
    }
 
    initialize(){
+      console.log(this)
       const positions = new Float32Array(this.amount * 3)
       
       const array = [...Array(this.amount)]
