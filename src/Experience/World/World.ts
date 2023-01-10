@@ -1,5 +1,6 @@
 import Experience from "../Experience"
 import * as THREE from "three"
+import GenerateGalaxy from "./GenerateGalaxy/GenerateGalaxy"
 
 export default class World {
    experience: Experience
@@ -9,11 +10,6 @@ export default class World {
       this.experience = experience
       this.scene = experience.scene
 
-      const testCube = new THREE.Mesh(
-         new THREE.BoxGeometry(1, 1),
-         new THREE.MeshBasicMaterial({color: "orange"})
-      )
-      console.log(this.scene)
-      this.scene.add(testCube)
+      new GenerateGalaxy(1000, this.experience)
    }
 }
