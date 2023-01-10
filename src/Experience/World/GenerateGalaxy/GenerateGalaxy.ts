@@ -7,9 +7,11 @@ export default class GenerateGalaxy {
    geometry: THREE.BufferGeometry
    scene: THREE.Scene
    debug: Debug
+   size: number
 
    constructor(amount:number, experience: Experience){
       this.amount = amount
+      this.size = 0.02
       this.geometry = new THREE.BufferGeometry()
       this.scene = experience.scene
       this.debug = experience.debug
@@ -23,14 +25,19 @@ export default class GenerateGalaxy {
          debugFolder?.add(this, "amount")
             .name("amount")
             .min(100)
-            .min(100000)
+            .max(100000)
+            .step(100)
+            .onFinishChange(this.initialize.bind(this))
+         debugFolder?.add(this, "size")
+            .name("amount")
+            .min(100)
+            .max(100000)
             .step(100)
             .onFinishChange(this.initialize.bind(this))
       }
    }
 
    initialize(){
-      console.log(this)
       const positions = new Float32Array(this.amount * 3)
       
       const array = [...Array(this.amount)]
@@ -44,7 +51,7 @@ export default class GenerateGalaxy {
 
       this.geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
       const material = new THREE.PointsMaterial({
-         size: 0.02,
+         size: this.size,
          sizeAttenuation: true,
          depthWrite: false,
          blending: THREE.AdditiveBlending
