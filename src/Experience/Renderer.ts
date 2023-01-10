@@ -21,8 +21,10 @@ export default class Renderer {
          canvas: this.canvas,
          antialias: true
       })
-      this.instance.setClearColor("orange")
-
+      this.instance.setClearColor("purple")
+      this.instance?.setSize(this.sizes.width, this.sizes.height)
+      this.instance?.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+   
    }
 
    resize(){
