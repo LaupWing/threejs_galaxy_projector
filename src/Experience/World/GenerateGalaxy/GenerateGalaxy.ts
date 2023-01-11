@@ -5,6 +5,7 @@ import Debug from "../../Utils/Debug"
 export default class GenerateGalaxy {
    amount: number
    geometry: THREE.BufferGeometry
+   material: THREE.PointsMaterial
    scene: THREE.Scene
    debug: Debug
    points?: THREE.Points
@@ -14,6 +15,12 @@ export default class GenerateGalaxy {
       this.amount = amount
       this.size = 0.02
       this.geometry = new THREE.BufferGeometry()
+      this.material = new THREE.PointsMaterial({
+         size: this.size,
+         sizeAttenuation: true,
+         depthWrite: false,
+         blending: THREE.AdditiveBlending
+      })
       this.scene = experience.scene
       this.debug = experience.debug
       this.setDebug()
@@ -30,10 +37,10 @@ export default class GenerateGalaxy {
             .step(100)
             .onFinishChange(this.initialize.bind(this))
          debugFolder?.add(this, "size")
-            .name("amount")
-            .min(100)
-            .max(100000)
-            .step(100)
+            .name("size")
+            .min(0.001)
+            .max(0.1)
+            .step(0.001)
             .onFinishChange(this.initialize.bind(this))
       }
    }
@@ -41,6 +48,8 @@ export default class GenerateGalaxy {
    initialize(){
       if(this.points){
          this.geometry.dispose()
+         this.material.dispose()
+         this.scene.remove(this.points)
       }
       const positions = new Float32Array(this.amount * 3)
       
@@ -52,15 +61,9 @@ export default class GenerateGalaxy {
          positions[i3 + 1] = (Math.random() - 0.5) * 3
          positions[i3 + 2] = (Math.random() - 0.5) * 3
       })
-
+      this.material.size = this.size
       this.geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
-      const material = new THREE.PointsMaterial({
-         size: this.size,
-         sizeAttenuation: true,
-         depthWrite: false,
-         blending: THREE.AdditiveBlending
-      })
-      this.points = new THREE.Points(this.geometry, material)
+      this.points = new THREE.Points(this.geometry, this.material)
       this.scene.add(this.points)
    }
 }
