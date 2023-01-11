@@ -8,6 +8,7 @@ export default class GenerateGalaxy {
    material: THREE.PointsMaterial
    scene: THREE.Scene
    debug: Debug
+   randomness: number
    points?: THREE.Points
    radius: number
    branches: number
@@ -19,6 +20,7 @@ export default class GenerateGalaxy {
       this.size = 0.02
       this.radius = 5
       this.branches = 3
+      this.randomness = 0.2
       this.spin = 1
       this.geometry = new THREE.BufferGeometry()
       this.material = new THREE.PointsMaterial({
@@ -30,7 +32,7 @@ export default class GenerateGalaxy {
       this.scene = experience.scene
       this.debug = experience.debug
       this.setDebug()
-      this.initialize()
+      this.generate()
    }
 
    setDebug(){
@@ -41,35 +43,41 @@ export default class GenerateGalaxy {
             .min(100)
             .max(100000)
             .step(100)
-            .onFinishChange(this.initialize.bind(this))
+            .onFinishChange(this.generate.bind(this))
          debugFolder?.add(this, "size")
             .name("size")
             .min(0.001)
             .max(0.1)
             .step(0.001)
-            .onFinishChange(this.initialize.bind(this))
+            .onFinishChange(this.generate.bind(this))
          debugFolder?.add(this, "radius")
             .name("radius")
             .min(0.01)
             .max(20)
             .step(0.01)
-            .onFinishChange(this.initialize.bind(this))
+            .onFinishChange(this.generate.bind(this))
          debugFolder?.add(this, "branches")
             .name("branches")
             .min(2)
             .max(20)
             .step(1)
-            .onFinishChange(this.initialize.bind(this))
+            .onFinishChange(this.generate.bind(this))
          debugFolder?.add(this, "spin")
             .name("spin")
             .min(-5)
             .max(5)
             .step(1)
-            .onFinishChange(this.initialize.bind(this))
+            .onFinishChange(this.generate.bind(this))
+         debugFolder?.add(this, "randomness")
+            .name("randomness")
+            .min(0)
+            .max(2)
+            .step(0.001)
+            .onFinishChange(this.generate.bind(this))
       }
    }
 
-   initialize(){
+   generate(){
       if(this.points){
          this.geometry.dispose()
          this.material.dispose()
