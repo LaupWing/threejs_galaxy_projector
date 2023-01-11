@@ -11,6 +11,7 @@ export default class GenerateGalaxy {
    points?: THREE.Points
    radius: number
    branches: number
+   spin: number
    size: number
 
    constructor(amount:number, experience: Experience){
@@ -18,6 +19,7 @@ export default class GenerateGalaxy {
       this.size = 0.02
       this.radius = 5
       this.branches = 3
+      this.spin = 1
       this.geometry = new THREE.BufferGeometry()
       this.material = new THREE.PointsMaterial({
          size: this.size,
@@ -58,6 +60,12 @@ export default class GenerateGalaxy {
             .max(20)
             .step(1)
             .onFinishChange(this.initialize.bind(this))
+         debugFolder?.add(this, "spin")
+            .name("spin")
+            .min(-5)
+            .max(5)
+            .step(1)
+            .onFinishChange(this.initialize.bind(this))
       }
    }
 
@@ -74,11 +82,12 @@ export default class GenerateGalaxy {
          const i3 = i * 3
 
          const radius = Math.random() * this.radius
+         const spinAngle = radius * this.spin
          const branchAngle = (i % this.branches) / this.branches * Math.PI * 2
 
-         positions[i3]     = Math.cos(branchAngle) * radius
+         positions[i3]     = Math.cos(branchAngle + spinAngle) * radius
          positions[i3 + 1] = 0
-         positions[i3 + 2] = Math.sin(branchAngle) * radius
+         positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius
       })
       this.material.size = this.size
       this.geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
