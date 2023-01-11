@@ -9,11 +9,15 @@ export default class GenerateGalaxy {
    scene: THREE.Scene
    debug: Debug
    points?: THREE.Points
+   radius: number
+   branches: number
    size: number
 
    constructor(amount:number, experience: Experience){
       this.amount = amount
       this.size = 0.02
+      this.radius = 5
+      this.branches = 3
       this.geometry = new THREE.BufferGeometry()
       this.material = new THREE.PointsMaterial({
          size: this.size,
@@ -42,6 +46,18 @@ export default class GenerateGalaxy {
             .max(0.1)
             .step(0.001)
             .onFinishChange(this.initialize.bind(this))
+         debugFolder?.add(this, "radius")
+            .name("radius")
+            .min(0.01)
+            .max(20)
+            .step(0.01)
+            .onFinishChange(this.initialize.bind(this))
+         debugFolder?.add(this, "branches")
+            .name("branches")
+            .min(2)
+            .max(20)
+            .step(1)
+            .onFinishChange(this.initialize.bind(this))
       }
    }
 
@@ -57,9 +73,12 @@ export default class GenerateGalaxy {
       array.forEach((_, i:number) => {
          const i3 = i * 3
 
-         positions[i3]     = (Math.random() - 0.5) * 3
-         positions[i3 + 1] = (Math.random() - 0.5) * 3
-         positions[i3 + 2] = (Math.random() - 0.5) * 3
+         const radius = Math.random() * this.radius
+         const branchAngle = (i % this.branches) / this.branches * Math.PI * 2
+
+         positions[i3]     = Math.cos(branchAngle) * radius
+         positions[i3 + 1] = 0
+         positions[i3 + 2] = Math.sin(branchAngle) * radius
       })
       this.material.size = this.size
       this.geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
