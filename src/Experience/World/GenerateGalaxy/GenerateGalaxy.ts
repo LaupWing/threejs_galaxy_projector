@@ -7,6 +7,7 @@ export default class GenerateGalaxy {
    geometry: THREE.BufferGeometry
    scene: THREE.Scene
    debug: Debug
+   points?: THREE.Points
    size: number
 
    constructor(amount:number, experience: Experience){
@@ -38,6 +39,9 @@ export default class GenerateGalaxy {
    }
 
    initialize(){
+      if(this.points){
+         this.geometry.dispose()
+      }
       const positions = new Float32Array(this.amount * 3)
       
       const array = [...Array(this.amount)]
@@ -56,7 +60,7 @@ export default class GenerateGalaxy {
          depthWrite: false,
          blending: THREE.AdditiveBlending
       })
-      const points = new THREE.Points(this.geometry, material)
-      this.scene.add(points)
+      this.points = new THREE.Points(this.geometry, material)
+      this.scene.add(this.points)
    }
 }
