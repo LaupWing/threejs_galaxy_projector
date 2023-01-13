@@ -101,13 +101,13 @@ export default class GenerateGalaxy {
          const spinAngle = radius * this.spin
          const branchAngle = (i % this.branches) / this.branches * Math.PI * 2
 
-         const randomX = Math.pow(Math.random(), this.randomnessPower)
-         const randomY = Math.pow(Math.random(), this.randomnessPower)
-         const randomZ = Math.pow(Math.random(), this.randomnessPower)
+         const randomX = Math.pow(Math.random(), this.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) 
+         const randomY = Math.pow(Math.random(), this.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) 
+         const randomZ = Math.pow(Math.random(), this.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) 
 
          positions[i3]     = Math.cos(branchAngle + spinAngle) * radius + randomX
          positions[i3 + 1] = randomY
-         positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius * randomZ
+         positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ
       })
       this.material.size = this.size
       this.geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
