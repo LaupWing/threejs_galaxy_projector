@@ -10,6 +10,8 @@ export default class GenerateGalaxy {
    debug: Debug
    randomness: number
    randomnessPower: number
+   insideColor: string
+   outsideColor: string
    points?: THREE.Points
    radius: number
    branches: number
@@ -23,13 +25,16 @@ export default class GenerateGalaxy {
       this.branches = 3
       this.randomness = 0.2
       this.randomnessPower = 3
+      this.insideColor = "#ff6030"
+      this.outsideColor = "#1b3984"
       this.spin = 1
       this.geometry = new THREE.BufferGeometry()
       this.material = new THREE.PointsMaterial({
          size: this.size,
          sizeAttenuation: true,
          depthWrite: false,
-         blending: THREE.AdditiveBlending
+         blending: THREE.AdditiveBlending,
+         vertexColors: true
       })
       this.scene = experience.scene
       this.debug = experience.debug
@@ -82,6 +87,8 @@ export default class GenerateGalaxy {
             .max(10)
             .step(0.001)
             .onFinishChange(this.generate.bind(this))
+         debugFolder?.addColor(this, "insideColor").onFinishChange(this.generate.bind(this))
+         debugFolder?.addColor(this, "outsideColor").onFinishChange(this.generate.bind(this))
       }
    }
 
@@ -92,8 +99,13 @@ export default class GenerateGalaxy {
          this.scene.remove(this.points)
       }
       const positions = new Float32Array(this.amount * 3)
+      const colors = new Float32Array(this.amount * 3)
+
+      const colorInside = new THREE.Color(this.insideColor)
+      const colorOutside = new THREE.Color(this.outsideColor)
       
       const array = [...Array(this.amount)]
+      
       array.forEach((_, i:number) => {
          const i3 = i * 3
 
@@ -101,16 +113,24 @@ export default class GenerateGalaxy {
          const spinAngle = radius * this.spin
          const branchAngle = (i % this.branches) / this.branches * Math.PI * 2
 
-         const randomX = Math.pow(Math.random(), this.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) 
-         const randomY = Math.pow(Math.random(), this.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) 
-         const randomZ = Math.pow(Math.random(), this.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) 
+         const randomX = Math.pow(Math.random(), this.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.randomness * radius
+         const randomY = Math.pow(Math.random(), this.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.randomness * radius
+         const randomZ = Math.pow(Math.random(), this.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.randomness * radius
 
          positions[i3]     = Math.cos(branchAngle + spinAngle) * radius + randomX
          positions[i3 + 1] = randomY
          positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ
+
+         const mixedColor = colorInside.clone()
+         mixedColor.lerp(colorOutside, radius / this.radius)
+         colors[i3 + 0] = mixedColor.r
+         colors[i3 + 1] = mixedColor.g
+         colors[i3 + 2] = mixedColor.b
       })
+      console.log(colors)
       this.material.size = this.size
       this.geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
+      this.geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3))
       this.points = new THREE.Points(this.geometry, this.material)
       this.scene.add(this.points)
    }
