@@ -127,7 +127,7 @@ export default class GenerateGalaxy {
          colors[i3 + 1] = mixedColor.g
          colors[i3 + 2] = mixedColor.b
       })
-      console.log(colors)
+      
       this.material.size = this.size
       this.geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
       this.geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3))
