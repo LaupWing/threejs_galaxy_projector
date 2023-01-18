@@ -1,5 +1,8 @@
 import * as THREE from "three"
 import Experience from "../../Experience"
+import galaxyVertexShader from "../../../shaders/galaxy/vertex.glsl"
+import galaxyFragmentShader from "../../../shaders/galaxy/fragment.glsl"
+
 import Debug from "../../Utils/Debug"
 
 export default class GenerateGalaxy {
@@ -33,21 +36,8 @@ export default class GenerateGalaxy {
          depthWrite: false,
          blending: THREE.AdditiveBlending,
          vertexColors: true,
-         vertexShader: `
-            void main() {
-               vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-               vec4 viewPosition = viewMatrix * modelPosition;
-               vec4 projectionPosition = projectionMatrix * viewPosition;
-
-               gl_Position = projectionPosition;
-               gl_PointSize = 2.0;
-            }
-         `,
-         fragmentShader: `
-            void main(){
-               gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-            }
-         `
+         vertexShader: galaxyVertexShader,
+         fragmentShader: galaxyVertexShader
       })
       this.scene = experience.scene
       this.debug = experience.debug
