@@ -5,7 +5,7 @@ import Debug from "../../Utils/Debug"
 export default class GenerateGalaxy {
    amount: number
    geometry: THREE.BufferGeometry
-   material: THREE.PointsMaterial
+   material: THREE.ShaderMaterial
    scene: THREE.Scene
    debug: Debug
    randomness: number
@@ -29,12 +29,25 @@ export default class GenerateGalaxy {
       this.outsideColor = "#1b3984"
       this.spin = 1
       this.geometry = new THREE.BufferGeometry()
-      this.material = new THREE.PointsMaterial({
-         size: this.size,
-         sizeAttenuation: true,
+      this.material = new THREE.ShaderMaterial({
          depthWrite: false,
          blending: THREE.AdditiveBlending,
-         vertexColors: true
+         vertexColors: true,
+         vertexShader: `
+            void main() {
+               vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+               vec4 viewPosition = viewMatrix * modelPosition;
+               vec4 projectionPosition = projectionMatrix * viewPosition;
+
+               gl_Position = projectionPosition;
+               gl_PointSize = 2.0;
+            }
+         `,
+         fragmentShader: `
+            void main(){
+               gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+            }
+         `
       })
       this.scene = experience.scene
       this.debug = experience.debug
