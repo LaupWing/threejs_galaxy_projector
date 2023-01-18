@@ -1,7 +1,7 @@
 import * as THREE from "three"
 import Experience from "../../Experience"
-import galaxyVertexShader from "../../../shaders/galaxy/vertex.glsl"
 import galaxyFragmentShader from "../../../shaders/galaxy/fragment.glsl"
+import galaxyVertexShader from "../../../shaders/galaxy/vertex.glsl"
 
 import Debug from "../../Utils/Debug"
 
@@ -37,7 +37,7 @@ export default class GenerateGalaxy {
          blending: THREE.AdditiveBlending,
          vertexColors: true,
          vertexShader: galaxyVertexShader,
-         fragmentShader: galaxyVertexShader
+         fragmentShader: galaxyFragmentShader
       })
       this.scene = experience.scene
       this.debug = experience.debug
